@@ -24,14 +24,14 @@ const createVacancy = async (req, res) => {
 
         res.status(200).json({
             ok: true,
-            msg: 'Vacante creada',
+            message: 'Vacante creada',
             vacante: vacancySaved
         })
         
     } catch (error) {
         res.status(500).json({
             ok: false,
-            msg: 'Ha habido un error'
+            message: 'Ha habido un error'
         });
     }
 }
@@ -59,14 +59,14 @@ const updateVacancy = async (req, res) => {
         if (!vacancy) {
             return res.status(404).json({
                 ok: false,
-                msg: 'No se encontro la vacante'
+                message: 'No se encontro la vacante'
             });
         }
 
         if (vacancy.user.toString() !== userId) {
             return res.status(401).json({
                 ok: false,
-                msg: 'No tienes permisos para editar esta vacante'
+                message: 'No tienes permisos para editar esta vacante'
             });
         }
 
@@ -79,13 +79,13 @@ const updateVacancy = async (req, res) => {
 
         res.status(200).json({
             ok: true,
-            msg: 'Vacante actualizada exitosamente',
+            message: 'Vacante actualizada exitosamente',
             vacancy: vacancyUpdated
         })
     } catch (error) {
         res.status(500).json({
             ok: false,
-            msg: 'Ha habido un error'
+            message: 'Ha habido un error'
         });
     }
 }
@@ -102,14 +102,14 @@ const deleteVacancy = async (req, res) => {
         if (!vacancy) {
             return res.status(404).json({
                 ok: false,
-                msg: 'No se encontro la vacante'
+                message: 'No se encontro la vacante'
             });
         }
 
         if (vacancy.user.toString() !== userId) {
             return res.status(401).json({
                 ok: false,
-                msg: 'No tienes permisos para eliminar esta vacante'
+                message: 'No tienes permisos para eliminar esta vacante'
             });
         }
 
@@ -117,12 +117,12 @@ const deleteVacancy = async (req, res) => {
 
         res.status(200).json({
             ok: true,
-            msg: 'Vacante eliminada exitosamente',
+            message: 'Vacante eliminada exitosamente',
         })
     } catch (error) {
         res.status(500).json({
             ok: false,
-            msg: 'Ha habido un error'
+            message: 'Ha habido un error'
         });
     }
 }

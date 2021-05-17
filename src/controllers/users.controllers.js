@@ -8,8 +8,7 @@ const { generateJWT } = require('../helpers/jwt');
 userCtrl.getUsers = async (req, res) => {
     const users = await User.find(); // {}, 'fullName email country'
     res.json({
-        users,
-        
+        users
     }); // uid: req.uid
 }
 
@@ -25,7 +24,7 @@ userCtrl.updateUser = async (req, res = response) => {
         if(!userDB) {
             return res.status(404).json({
                 ok: false,
-                message: 'The user not exist'
+                message: 'El usuario no existe'
             });
         }
 
@@ -38,7 +37,7 @@ userCtrl.updateUser = async (req, res = response) => {
             if(existEmail) {
                 return res.status(400).json({
                     ok: false,
-                    message: 'The email already exist'
+                    message: 'EL email ya existe'
                 });
             }
         }
@@ -61,7 +60,7 @@ userCtrl.updateUser = async (req, res = response) => {
 
 userCtrl.deleteUser = async (req, res) => {
     await User.findByIdAndDelete(req.params.id);
-    res.json('User Deleted')
+    res.json('Usuario eliminado exitosamente')
 }
 
 module.exports = userCtrl;

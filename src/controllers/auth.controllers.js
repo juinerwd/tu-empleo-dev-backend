@@ -15,7 +15,7 @@ const login = async (req, res = response) => {
         if(!userDB) {
             return res.status(404).json({
                 ok: false,
-                message: 'Correo electrónico o la contraseña incorrecta'
+                message: 'Correo electrónico o contraseña incorrecta'
             });
         }
 
@@ -23,7 +23,7 @@ const login = async (req, res = response) => {
         if(!validPassword) {
             return res.status(400).json({
                 ok: false,
-                message: 'Correo electrónico o la contraseña incorrecta'
+                message: 'Correo electrónico o contraseña incorrecta'
             });
         }
 
@@ -58,7 +58,7 @@ const createUser = async (req, res = response) => {
         if(existEmail) {
             return res.status(400).json({
                 ok: false,
-                message: 'The email already exist'
+                message: 'EL email ya existe'
             });
         }
 
@@ -92,12 +92,15 @@ const createUser = async (req, res = response) => {
 
 const revalidateToken = async (req, res = response) => {
 
-    const uid = req.uid;
-
+    const {uid} = req;
+    const userDB = await User.findById(uid);
+    // console.log(req);
     // Generar un nuevo TOKEN ---- JWT
     const token = await generateJWT(uid);
     res.json({
-        ok: false,
+        ok: true,
+        uid,
+        name: userDB.fullName,
         token
     });
 }
