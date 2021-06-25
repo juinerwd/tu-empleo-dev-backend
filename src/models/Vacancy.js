@@ -2,27 +2,46 @@ const { Schema, model } = require('mongoose');
 
 const vacancySchema = new Schema({
     title: {
-        type: String,
+        type: 'string',
         required: true
     },
     description: {
-        type: String,
+        type: 'string',
         required: true
     },
-    company: {
-        type: String,
-        required: true
+    v_company: {
+        type: 'string',
     },
-    experience: {
-        type: Number,
+    experience:{
+        type: 'string',
         required: true
     },
     salary: {
-        type: Number,
+        type: 'string',
         required: true
     },
     location: {
-        type: String,
+        type: Schema.Types.ObjectId,
+        ref: 'Country',
+        required: true
+    },
+    typeCurrency: {
+        type: Schema.Types.ObjectId,
+        ref: 'Currency',
+        required: true
+    },
+    technologies: [{
+        type: Object,
+        required: true
+    }],
+    type_contract: {
+        type: Schema.Types.ObjectId,
+        ref: 'Contract',
+        required: true
+    },
+    type_workingday: {
+        type: Schema.Types.ObjectId,
+        ref: 'Workingday',
         required: true
     },
     state: {
@@ -48,7 +67,7 @@ const vacancySchema = new Schema({
 
 vacancySchema.method('toJSON', function() {
     const { __v, _id, ...object } = this.toObject();
-    object.id = _id;
+    object.vid = _id;
     return object;
 });
 

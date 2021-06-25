@@ -5,23 +5,23 @@ const { validateJWT } = require('../middlewares/validate-jwt');
 
 const router = Router();
 
-const { getUsers, createUser, updateUser, deleteUser } = require('../controllers/users.controllers');
+const { getUsers, updateUser, updatePassword } = require('../controllers/users.controllers');
 
 router.get('/', validateJWT, getUsers);
 
-router.put('/:id',[
+router.put('/:id', validateJWT, updateUser);
+
+router.put('/password/:id', validateJWT, updatePassword);
+
+// router.delete('/:id', deleteUser);
+
+module.exports = router;
+
+/**[
     validateJWT,
-    check('fullName', 'El nombre es obligatorio').not().isEmpty(),
-    check('email', 'El email es obligatorio').isEmail(),
+    check('name', 'El nombre es obligatorio').not().isEmpty(),
+    check('lastname', 'El apellido es obligatorio').not().isEmpty(),
     check('country', 'El pais es obligatorio').not().isEmpty(),
     check('policy', 'Debes aceptar los terminos y condiciones').not().isEmpty(),
     validateFields
-], updateUser);
-
-router.route('/:id')
-    .get((req, res) => res.json({
-        message: 'Get User unique'
-    }))
-    .delete(deleteUser)
-
-module.exports = router;
+], */

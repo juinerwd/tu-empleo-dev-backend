@@ -1,7 +1,11 @@
 const { Schema, model } = require('mongoose');
 
 const userSchema = new Schema({
-    fullName: {
+    name: {
+        type: String,
+        required: true
+    },
+    lastname: {
         type: String,
         required: true
     },
@@ -10,12 +14,19 @@ const userSchema = new Schema({
         required: true,
         unique: true
     },
+    phone_number: {
+        type: Number,
+    },
+    company: {
+        type: String
+    },
     password: {
         type: String,
         required: true
     },
     country: {
-        type: String,
+        type: Schema.Types.ObjectId,
+        ref: 'Country',
         required: true
     },
     policy: {
@@ -26,6 +37,10 @@ const userSchema = new Schema({
         type: String,
         required: true,
         default: 'DEV_ROLE'
+    },
+    profile_photo: {
+        type: String,
+        default: 'https://res.cloudinary.com/dqpdnjjs5/image/upload/v1622233709/ultjeskqe8w4rj50paun.png'
     }
 }, { timestamps: true });
 

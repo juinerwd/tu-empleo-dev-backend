@@ -1,10 +1,11 @@
 const { response } = require('express');
 
 const Vacancy = require('../models/Vacancy');
+const Candidate = require('../models/Candidate');
 
 // Obteniendo todas las vacantes de la dase de datos
 const getVacancies = async (req, res = response) => {
-    const vacancies = await Vacancy.find().populate('user','fullName');
+    const vacancies = await Vacancy.find().populate('user','name');
 
     res.status(200).json({
         ok: true,
@@ -25,7 +26,7 @@ const createVacancy = async (req, res) => {
         res.status(200).json({
             ok: true,
             message: 'Vacante creada',
-            vacante: vacancySaved
+            vacancy: vacancySaved
         })
         
     } catch (error) {
@@ -33,6 +34,58 @@ const createVacancy = async (req, res) => {
             ok: false,
             message: 'Ha habido un error'
         });
+    }
+}
+
+const applyVacancy = async (req, res) => {
+    
+    const newCandidate = new Candidate(req.body);
+    const {vacancy_id, candidate_email} = req.body;
+
+    try {
+
+        const existCandidate = await Candidate.findOne({ vacancy_id, candidate_email });
+        // Validando si el email exist
+        if(existCandidate) {
+            return res.status(400).json({
+                ok: false,
+                msg: 'Ya te has postulado a esta vacante'
+            });
+        }
+
+        const candidateSaved = await newCandidate.save();
+
+        res.status(200).json({
+            ok: true,
+            msg: 'Tu postulación ha sido enviada correctamente',
+            candidate: candidateSaved
+        })
+        
+    } catch (error) {
+        res.status(500).json({
+            ok: false,
+            msg: 'Ha habido un error'
+        });
+    }
+}
+
+const getCandidates = async (req, res) => {
+
+    const recruiter_id = req.params.id;
+    
+    try {
+        const candidates = await Candidate.find({recruiter_id});
+
+        res.status(200).json({
+            ok: true,
+            candidates
+        })
+        
+    } catch (error) {
+        res.status(500).json({
+            ok: false,
+            msg: 'Ha habido un error'
+        })
     }
 }
 
@@ -130,6 +183,8 @@ const deleteVacancy = async (req, res) => {
 module.exports = {
     getVacancies,
     createVacancy,
+    applyVacancy,
+    getCandidates,
     getVacancy,
     updateVacancy,
     deleteVacancy

@@ -33,8 +33,14 @@ const login = async (req, res = response) => {
         res.json({
             ok: true,
             uid: userDB.id,
-            name: userDB.fullName,
-            message: 'Bienvenido usuario',
+            name: userDB.name,
+            lastname: userDB.lastname,
+            email: userDB.email,
+            phone_number: userDB.phone_number,
+            company: userDB.company,
+            country: userDB.country,
+            profile_photo: userDB.profile_photo,
+            role: userDB.role,
             token: token
         });
     } catch (error) {
@@ -77,7 +83,13 @@ const createUser = async (req, res = response) => {
         res.json({
             ok: true,
             uid: newUser.id,
-            name: newUser.fullName,
+            name: newUser.name,
+            lastname: newUser.lastname,
+            email: newUser.email,
+            company: newUser.company,
+            country: newUser.country,
+            profile_photo: newUser.profile_photo,
+            role: newUser.role,
             token: token
         });
         
@@ -86,7 +98,7 @@ const createUser = async (req, res = response) => {
             ok: false,
             message: 'Hubo un error inesperado'
         });
-
+        console.log(error);
     }
 }
 
@@ -100,7 +112,14 @@ const revalidateToken = async (req, res = response) => {
     res.json({
         ok: true,
         uid,
-        name: userDB.fullName,
+        name: userDB.name,
+        lastname: userDB.lastname,
+        email: userDB.email,
+        phone_number: userDB.phone_number,
+        company: userDB.company,
+        country: userDB.country,
+        profile_photo: userDB.profile_photo,
+        role: userDB.role,
         token
     });
 }

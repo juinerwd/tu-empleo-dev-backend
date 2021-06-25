@@ -3,64 +3,108 @@ var  bcrypt = require ( 'bcryptjs' );
 const userCtrl = {};
 
 const User = require('../models/User');
+const Profile = require('../models/DataUser');
+
 const { generateJWT } = require('../helpers/jwt');
 
-userCtrl.getUsers = async (req, res) => {
+const getUsers = async (req, res) => {
     const users = await User.find(); // {}, 'fullName email country'
     res.json({
         users
     }); // uid: req.uid
 }
 
-userCtrl.updateUser = async (req, res = response) => {
+const updateUser = async (req, res = response) => {
     // TODO: Validar
 
-    const uid = req.params.id;
-
+    const userid = req.params.id;
     try {
 
-        const userDB = await User.findById(uid);
+        const userDB = await User.findById(userid);
 
-        if(!userDB) {
+        if(!userDB && userid !== userDB.uid) {
             return res.status(404).json({
                 ok: false,
-                message: 'El usuario no existe'
+                msg: 'El usuario no existe'
             });
         }
 
         // Updates
-        const {password, policy, email, ...fields} = req.body;
+        const updateUser = {
+            ...req.body
+        };
 
-        if (userDB.email !== email) {
-            const existEmail = await User.findOne({ email });
-            // Validando si el email exist
-            if(existEmail) {
-                return res.status(400).json({
-                    ok: false,
-                    message: 'EL email ya existe'
-                });
-            }
-        }
-        fields.email = email;
-        const userUpdated = await User.findOneAndUpdate(uid, fields, { new: true });
+        const userUpdated = await User.findByIdAndUpdate(userid, updateUser, { new: true });
 
         res.json({
             ok: true,
-            UserUpdated: userUpdated
+            msg: 'Datos actualizados',
+            userUpdated
         });
         
     } catch (error) {
         res.status(500).json({
             ok: false,
-            message: 'Hubo un error inesperado'
+            msg: 'Hubo un error inesperado'
         });
     }
 
 }
 
-userCtrl.deleteUser = async (req, res) => {
-    await User.findByIdAndDelete(req.params.id);
-    res.json('Usuario eliminado exitosamente')
+const updatePassword = async (req, res = response) => {
+
+    const userid = req.params.id;
+    let { currentPassword, password } = req.body;
+
+    try {
+        const userDB = await User.findById(userid);
+        if(!userDB && userid !== userDB.uid) {
+            return res.status(404).json({
+                ok: false,
+                msg: 'El usuario no existe'
+            });
+        }
+
+        const validPassword = bcrypt.compareSync( currentPassword, userDB.password);
+        if(!validPassword) {
+            return res.status(400).json({
+                ok: false,
+                msg: 'La contraseña es incorrecta'
+            });
+        }
+
+        // Encriptar contraseña
+        const salt = bcrypt.genSaltSync();
+        password = bcrypt.hashSync(password, salt);
+
+        const updateUser = {
+            password
+        };
+
+        await User.findByIdAndUpdate(userid, updateUser, { new: true });
+
+        res.status(200).json({
+            ok: true,
+            msg: 'Contraseña actualizada',
+        });
+        
+    } catch (error) {
+        res.status(400).json({
+            ok: true,
+            msg: 'Ha habido un error',
+        });
+        console.log(error);
+    }
+
 }
 
-module.exports = userCtrl;
+// userCtrl.deleteUser = async (req, res) => {
+//     await User.findByIdAndDelete(req.params.id);
+//     res.json('Usuario eliminado exitosamente')
+// }
+
+module.exports = {
+    getUsers,
+    updateUser,
+    updatePassword
+};

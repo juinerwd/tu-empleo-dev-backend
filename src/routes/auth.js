@@ -13,7 +13,8 @@ router.post('/', [
 ], login);
 
 router.post('/register', [
-    check('fullName', 'El nombre es obligatorio').not().isEmpty(),
+    check('name', 'El nombre es obligatorio').not().isEmpty(),
+    check('lastname', 'El apellido es obligatorio').not().isEmpty(),
     check('email', 'El email es obligatorio').isEmail(),
     check('password', 'La contraseña debe contener maás de 8 caracteres').isLength({ min: 8 }),
     check('country', 'El pais es obligatorio').not().isEmpty(),
